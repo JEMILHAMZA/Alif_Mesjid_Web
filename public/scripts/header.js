@@ -1,98 +1,38 @@
-// document.addEventListener("DOMContentLoaded", async () => {
-//     // Function to fetch prayer times
-//     const fetchPrayerTimes = async () => {
-//         try {
-//             const response = await axios.get("http://api.aladhan.com/v1/timingsByCity", {
-//                 params: {
-//                     city: "Addis Ababa",
-//                     country: "Ethiopia",
-//                     method: 2,
-//                 }
-//             });
+// custom script  for the header //////////////////////////////////////////////////////////////////////////////
+async function fetchPrayerTimes() {
+  const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Addis%20Ababa&country=Ethiopia&method=2');
+  const data = await response.json();
+  const timings = data.data.timings;
 
-//             const timings = response.data.data.timings;
-//             document.getElementById("prayer-times").innerText = `
-//                 Fajr: ${timings.Fajr}, 
-//                 Sunrise: ${timings.Sunrise}, 
-//                 Dhuhr: ${timings.Dhuhr}, 
-//                 Asr: ${timings.Asr}, 
-//                 Maghrib: ${timings.Maghrib}, 
-//                 Isha: ${timings.Isha}
-//             `;
-//         } catch (error) {
-//             console.error("Error fetching prayer times: ", error);
-//         }
-//     };
+  document.getElementById('fajr-time').textContent = timings.Fajr;
+  document.getElementById('sunrise-time').textContent = timings.Sunrise;
+  document.getElementById('zuhr-time').textContent = timings.Dhuhr;
+  document.getElementById('asr-time').textContent = timings.Asr;
+  document.getElementById('maghrib-time').textContent = timings.Maghrib;
+  document.getElementById('isha-time').textContent = timings.Isha;
+}
 
-//     // Function to fetch Arabic date
-//     const fetchArabicDate = async () => {
-//         try {
-//             const today = new Date();
-//             const day = String(today.getDate()).padStart(2, '0');
-//             const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
-//             const year = today.getFullYear();
-//             const formattedDate = `${day}-${month}-${year}`; // format: DD-MM-YYYY
-//             const response = await axios.get(`https://api.aladhan.com/v1/gToH/${formattedDate}`);
-//             const hijriData = response.data.data.hijri;
+async function fetchDates() {
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  const formattedDate= `${day}-${month}-${year}`
+  // const date= new Date().getDate();
+  const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${formattedDate}`);
+  const data = await response.json();
+  const gregorianDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 
-//             const hijriFormattedDate = `${hijriData.month.en} ${hijriData.day}, ${hijriData.year}`;
-//             document.getElementById("arabic-date").innerText = hijriFormattedDate;
-//         } catch (error) {
-//             console.error("Error fetching Arabic date: ", error);
-//         }
-//     };
+  // Formatting the Hijri date
+  const hijriDateData = data.data.hijri;
+  const hijriDay = hijriDateData.day;
+  const hijriMonth = hijriDateData.month.en;
+  const hijriYear = hijriDateData.year;
+  const hijriDate = `${hijriMonth} ${hijriDay}, ${hijriYear}`;
 
-//     // Function to fetch Gregorian date
-//     const fetchGregorianDate = () => {
-//         const today = new Date();
-//         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-//         const formattedDate = today.toLocaleDateString("en-US", options);
-//         document.getElementById("gregorian-date").innerText = formattedDate;
-//     };
+  document.getElementById('gregorian-date').textContent = gregorianDate;
+  document.getElementById('hijri-date').textContent = hijriDate;
+}
 
-//     // Fetch prayer times, Arabic date, and Gregorian date
-//     await fetchPrayerTimes();
-//     await fetchArabicDate();
-//     fetchGregorianDate();
-// });
-
-  
-
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const today = new Date();
-    const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
-  
-    // Fetch Gregorian and Arabic dates
-    axios.get(`https://api.aladhan.com/v1/gToH/${formattedDate}`)
-      .then(response => {
-        const hijri = response.data.data.hijri;
-        const gregorian = response.data.data.gregorian;
-        const hijriDate = `${hijri.day} ${hijri.month.en}, ${hijri.year}`;
-        const gregorianDate = `${gregorian.day} ${gregorian.month.en} ${gregorian.year}`;
-        document.getElementById("arabic-date").innerText = hijriDate;
-        document.getElementById("gregorian-date").innerText = gregorianDate;
-      })
-      .catch(error => {
-        console.error("Error fetching Arabic date: ", error);
-      });
-  
-    // Fetch prayer times
-    const city = "Addis Ababa"; // Replace with your city
-    const country = "Ethiopia"; // Replace with your country
-    axios.get(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=2`)
-      .then(response => {
-        const timings = response.data.data.timings;
-        const prayerTimes = `Fajr: ${timings.Fajr}, Sunrise: ${timings.Sunrise}, Dhuhr: ${timings.Dhuhr}, Asr: ${timings.Asr}, Maghrib: ${timings.Maghrib}, Isha: ${timings.Isha}`;
-        document.getElementById("prayer-times").innerText = prayerTimes;
-      })
-      .catch(error => {
-        console.error("Error fetching prayer times: ", error);
-      });
-  });
-  
+fetchPrayerTimes();
+fetchDates();
