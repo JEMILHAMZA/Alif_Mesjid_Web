@@ -1,6 +1,6 @@
 # Alif_Mesjid_Web
 
-Certainly! Here’s the setup instructions section in the format you requested:
+
 
 ---
 
