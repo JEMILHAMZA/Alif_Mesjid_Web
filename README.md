@@ -50,6 +50,8 @@ To set up the project locally, follow these steps:
 7. **Access the application**:
    - Open your web browser and go to `http://localhost:3000` (or the port specified in your `.env` file).
 
+
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 
