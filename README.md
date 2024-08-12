@@ -33,7 +33,7 @@
    ## Installation
    To set up the project locally, follow these steps:
 
-  1. **Clone the repository**:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/JEMILHAMZA/Alif_Mesjid_Web.git
    cd Alif_Mesjid_Web
